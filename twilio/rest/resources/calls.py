@@ -104,7 +104,7 @@ class Calls(ListResource):
         kwargs["EndTime"] = parse_date(ended)
         return super(Calls, self).iter(**kwargs)
 
-    def create(self, to, from_, url, status_method=None, status_events=None,
+    def create(self, to, from_, url=None, application_sid=None, status_method=None, status_events=None,
                **kwargs):
         """
         Make a phone call to a number.
@@ -146,9 +146,12 @@ class Calls(ListResource):
 
         :return: A :class:`Call` object
         """
+        if url is None and application_sid is None:
+          raise Exception('Must provide either url or application_sid')
         kwargs["from"] = from_
         kwargs["to"] = to
         kwargs["url"] = url
+        kwargs["application_sid"] = application_sid
         kwargs["status_callback_method"] = status_method
         kwargs["status_callback_event"] = status_events
         return self.create_instance(kwargs)
